@@ -56,7 +56,8 @@ def start_spacer():
 
 
     spacer_user_options = request_params.get("spacerUserOptions", "")
-
+    var_names = request_params.get("varNames", "")
+    print("var_names", var_names)
     exp_folder = os.path.join(MEDIA, new_exp_name)
     os.mkdir(exp_folder)
 
@@ -77,9 +78,13 @@ def start_spacer():
         run_cmd = " ".join(run_args)
         f.write(run_cmd)
 
+    #save VarNames
+    with open(os.path.join(exp_folder, "var_names"), "w") as f:
+        f.write(var_names)
+
     Popen(run_args, stdin=PIPE, stdout=stdout_file, stderr=stderr_file, cwd = exp_folder)
 
-    return json.dumps({'status': "success", 'spacer_state': "running", 'nodes_list': {}, 'exp_name': new_exp_name})
+    return json.dumps({'status': "success", 'spacer_state': "running", 'exp_name': new_exp_name})
 
 def poke():
     #TODO: finish parsing using all the files in the exp_folder (input_file, etc.)
@@ -88,17 +93,12 @@ def poke():
     exp_folder = os.path.join(MEDIA, exp_path)
     nodes_list = []
     run_cmd = ""
-    with open(os.path.join(exp_folder, "stdout"), "r") as f:
-        stdout = f.readlines()
-    with open(os.path.join(exp_folder, "stderr"), "r") as f:
-        stderr = f.readlines()
-    with open(os.path.join(exp_folder, ".z3-trace"), "r") as f:
-        z3_trace = f.readlines()
-    with open(os.path.join(exp_folder, "spacer.log"), "r") as f:
-        spacer_log = f.readlines()
-
-    with open(os.path.join(exp_folder, "run_cmd"), "r") as f:
-        run_cmd = f.readlines()[0].strip()
+    stdout = safe_read(os.path.join(exp_folder, "stdout"))
+    stderr = safe_read(os.path.join(exp_folder, "stderr"))
+    z3_trace = safe_read(os.path.join(exp_folder, ".z3_trace"))
+    spacer_log = safe_read(os.path.join(exp_folder, "spacer.log"))
+    run_cmd = safe_read(os.path.join(exp_folder, "run_cmd"))[0].strip()
+    var_names = safe_read(os.path.join(exp_folder, "var_names"))[0].strip()
 
     spacer_state = get_spacer_state(stderr, stdout)
     #load the file into db for parsing 
@@ -132,7 +132,8 @@ def poke():
     return json.dumps({'status': "success",
                        'spacer_state': spacer_state,
                        'nodes_list': nodes_list,
-                       'run_cmd': run_cmd})
+                       'run_cmd': run_cmd,
+                       'var_names': var_names})
 
 
 @app.route('/spacer/fetch_exps', methods=['POST'])

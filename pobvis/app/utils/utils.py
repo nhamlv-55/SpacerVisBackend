@@ -5,6 +5,17 @@ from settings import DATABASE, MEDIA, options_for_visualization
 import json
 from datetime import datetime
 import psutil
+
+def safe_read(file_path):
+    try:
+        with open(file_path, "r") as f:
+            return f.readlines()
+    except Exception as e:
+        print(e)
+        return [""]
+
+
+
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
