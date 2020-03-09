@@ -44,7 +44,8 @@ For example, you have your own Z3 at `~/opt/z3squashed/`, your binary is at `~/o
  docker exec -it SpacerBackend bash -c "python3 main.py -z3 /SpacerBackend/z3s/z3squashed/build/z3"
 ```
 
-## 3. Upgrade the image
+## 3. Update the image to the latest version
+When the backend is updated, you can update it as follows:
 ### 3.1 Backup the current database
 Before updating the image, we should backup the current database.
 
@@ -53,7 +54,7 @@ Assume that we want to backup the database to `/home/workspace/`
 docker cp SpacerBackend:/SpacerBackend/exp_db /home/workspace/
 docker cp SpacerBackend:/SpacerBackend/media /home/workspace/
 ```
-### 3.2 Updating the image
+### 3.2 Update the image
 ```
 docker kill SpacerBackend
 docker rm SpacerBackend
