@@ -9,7 +9,11 @@ import psutil
 def safe_read(file_path):
     try:
         with open(file_path, "r") as f:
-            return f.readlines()
+            data = f.readlines()
+            if len(data)==0:
+                return [""]
+            else:
+                return data
     except Exception as e:
         print(e)
         return [""]
