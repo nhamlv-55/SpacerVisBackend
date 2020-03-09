@@ -95,7 +95,7 @@ def poke():
     run_cmd = ""
     stdout = safe_read(os.path.join(exp_folder, "stdout"))
     stderr = safe_read(os.path.join(exp_folder, "stderr"))
-    z3_trace = safe_read(os.path.join(exp_folder, ".z3_trace"))
+    z3_trace = safe_read(os.path.join(exp_folder, ".z3-trace"))
     spacer_log = safe_read(os.path.join(exp_folder, "spacer.log"))
     run_cmd = safe_read(os.path.join(exp_folder, "run_cmd"))[0].strip()
     var_names = safe_read(os.path.join(exp_folder, "var_names"))[0].strip()
