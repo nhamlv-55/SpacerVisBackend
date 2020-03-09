@@ -123,9 +123,11 @@ def poke():
                     node["ast_json"] = ast_json
 
                 except Exception as e:
-                    print("Exception when ordering the node:", e)
-                    print("Broken Node", node)
-                    print("Broken Node exprID:", node["exprID"])
+                    # PySMT has a bug in __str__ of the Exception, hence for now we need to turn off the debug message here
+                    # print("expr stream:", expr)
+                    # print("Exception when ordering the node:", e)
+                    # print("Broken Node", node)
+                    # print("Broken Node exprID:", node["exprID"])
                     node["ast_json"] = {"type": "ERROR", "content": "trace is incomplete"}
 
 
