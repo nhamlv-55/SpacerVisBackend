@@ -54,7 +54,6 @@ def start_spacer():
     print(new_exp_name)
     insert_db('INSERT INTO exp(name, done, result, aux, time) VALUES (?,?,?,?,?)',(new_exp_name, 0, "UNK", "NA", 0))
 
-
     spacer_user_options = request_params.get("spacerUserOptions", "")
     var_names = request_params.get("varNames", "")
     print("var_names", var_names)
@@ -85,6 +84,32 @@ def start_spacer():
     Popen(run_args, stdin=PIPE, stdout=stdout_file, stderr=stderr_file, cwd = exp_folder)
 
     return json.dumps({'status': "success", 'spacer_state': "running", 'exp_name': new_exp_name})
+
+def upload_files():
+    def _write_file(exp_folder, content, name):
+        #write file to the exp_folder
+        _file = open(os.path.join(exp_folder, name), "wb")
+        _file.write(str.encode(content))
+        _file.flush() # commit file buffer to disk so that Spacer can access it
+
+
+
+    request_params = request.get_json()
+    spacer_log = request_params.get('spacerLog', '')
+    input_file = request_params.get('inputFile', '')
+    run_cmd = request_params.get('runCmd', '')
+    new_exp_name = request_params.get('expName', '')
+    insert_db('INSERT INTO exp(name, done, result, aux, time) VALUES (?,?,?,?,?)',(new_exp_name, 0, "UNK", "NA", 0))
+    exp_folder = os.path.join(MEDIA, new_exp_name)
+    os.mkdir(exp_folder)
+
+    #write input file
+    _write_file(exp_folder, input_file, "input_file.smt2")
+    _write_file(exp_folder, spacer_log, "spacer.log")
+    _write_file(exp_folder, run_cmd, "run_cmd")
+
+    return json.dumps({'status': "success", 'message': "success"})
+
 
 def poke():
     #TODO: finish parsing using all the files in the exp_folder (input_file, etc.)
@@ -147,5 +172,9 @@ def handle_start_spacer_iterative():
 @app.route('/spacer/poke', methods=['POST'])
 def handle_poke():
     return poke()
+@app.route('/spacer/upload_files', methods=['POST'])
+def handle_upload_files():
+    return upload_files()
+
 if __name__ == '__main__':
     app.run()
