@@ -10,7 +10,7 @@ __Note__: because of the docker network interface on Mac, this instruction only 
 ```
 (However, I recommend trying the `dev` image for the latest features and bug fixes
 ```
- docker run -dit --network="host" -p 5000:5000 --name SpacerBackend levn/spacer_backend:latest
+ docker run -dit --network="host" -p 5000:5000 --name SpacerBackend levn/spacer_backend:dev
 
 ```
 Arguments breakdown:
