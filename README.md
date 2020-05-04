@@ -2,7 +2,6 @@ This is the backend server to use with the frontend hosted [here](https://nhamlv
 
 Another fork using the same backend is maintained by Aishwarya [here] (https://github.com/aishr/saturation-visualization)
 
-__Note__: because of the docker network interface on Mac, this instruction only works on Linux.
 # Using Docker
 ## 1. Start the container
 
