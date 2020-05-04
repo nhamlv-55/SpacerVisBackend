@@ -1,16 +1,18 @@
 This is the backend server to use with the frontend hosted [here](https://nhamlv-55.github.io/saturation-visualization/#/)
 
+Another fork using the same backend is maintained by Aishwarya [here] (https://github.com/aishr/saturation-visualization)
+
 __Note__: because of the docker network interface on Mac, this instruction only works on Linux.
 # Using Docker
 ## 1. Start the container
 
 ```
- docker run -dit --network="host" -p 5000:5000 --name SpacerBackend levn/spacer_backend:latest
+ docker run -dit -p 5000:5000 --name SpacerBackend levn/spacer_backend:latest
 
 ```
 (However, I recommend trying the `dev` image for the latest features and bug fixes
 ```
- docker run -dit --network="host" -p 5000:5000 --name SpacerBackend levn/spacer_backend:dev
+ docker run -dit -p 5000:5000 --name SpacerBackend levn/spacer_backend:dev
 
 ```
 Arguments breakdown:
@@ -65,7 +67,7 @@ docker cp SpacerBackend:/SpacerBackend/media /home/workspace/
 ```
 docker kill SpacerBackend
 docker rm SpacerBackend
-docker run -dit --network="host" -p 5000:5000 --name SpacerBackend levn/spacer_backend:latest
+docker run -dit -p 5000:5000 --name SpacerBackend levn/spacer_backend:latest
 ```
 Then re run the server using either 2.a or 2.b. 
 ### 3.3 Recover the database (if we backed it up earlier using 3.1)
