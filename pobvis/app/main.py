@@ -254,5 +254,8 @@ def handle_get():
 @app.route('/spacer/transform_exprs', methods=['POST'])
 def handle_transform():
     return transform_exprs()
+@app.route('/spacer/upload_files', methods=['POST'])
+def handle_upload_files():
+    return upload_files()
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
