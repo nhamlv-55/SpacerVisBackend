@@ -72,10 +72,10 @@ def transform_exprs():
     
 
 def save_exprs(dynamodb=None):
-    region = environ.get('DYNAMODB_REGION_NAME')
-    access_key = environ.get('DYNAMODB_ACCESS_KEY_ID')
-    secret_key = environ.get('DYNAMODB_SECRET_ACCESS_KEY')
-    table_name = environ.get('DYNAMODB_TABLE_NAME')
+    region = environ.get('REGION_NAME')
+    access_key = environ.get('ACCESS_KEY_ID')
+    secret_key = environ.get('SECRET_ACCESS_KEY')
+    table_name = environ.get('TABLE_NAME')
     if not dynamodb:
         dynamodb = boto3.resource(
                 'dynamodb',
