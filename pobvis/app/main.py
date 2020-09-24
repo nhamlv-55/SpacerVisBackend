@@ -1,5 +1,18 @@
 """Style guide: use underscore for all variable and function names"""
 
+from pip import main as pipmain
+try: 
+    __import__('boto3')
+except ImportError: 
+    pipmain(['install', 'boto3'])
+
+try:
+    __import__('requests')
+except ImportError:
+    pipmain(['install', 'requests'])
+    
+import requests
+import boto3
 import sys
 if sys.version_info.major < 3:
     raise Exception("User error: This application only supports Python 3, so please use python3 instead of python!")
@@ -11,6 +24,7 @@ import argparse
 from chctools import horndb as H
 import io
 import os
+from os import environ
 from settings import DATABASE, MEDIA, options_for_visualization
 from subprocess import PIPE, STDOUT, Popen, run
 from chctools import horndb as H
@@ -45,6 +59,59 @@ def pooling():
     update_status()
     return fetch_exps()
 
+def transform_exprs():
+
+    request_params = request.get_json()
+    exp_path = request_params.get('exp_path', '')
+    response = requests.get("http://localhost:2000/api/v1/transformations/applytransformation?instance=" + exp_path)
+    print(response.json())
+    exp_folder = os.path.join(MEDIA, exp_path)
+    with open(os.path.join(exp_folder, "transformed_expr_map"), "w") as f:
+         f.write(json.dumps(response.json()))
+    return json.dumps({'status': "success", "t_expr_map": response.json()})
+    
+
+def save_exprs(dynamodb=None):
+    region = environ.get('DYNAMODB_REGION_NAME')
+    access_key = environ.get('DYNAMODB_ACCESS_KEY_ID')
+    secret_key = environ.get('DYNAMODB_SECRET_ACCESS_KEY')
+    table_name = environ.get('DYNAMODB_TABLE_NAME')
+    if not dynamodb:
+        dynamodb = boto3.resource(
+                'dynamodb',
+                region_name=region,
+                aws_access_key_id=access_key,
+                aws_secret_access_key=secret_key
+        )
+        client = boto3.client(
+                'dynamodb',
+                region_name=region,
+                aws_access_key_id=access_key,
+                aws_secret_access_key=secret_key
+        )
+    table = dynamodb.Table(table_name)
+    request_params = request.get_json()
+    exp_path = request_params.get('exp_path', '')
+    expr_map = request_params.get('expr_map', '')
+    exp_folder = os.path.join(MEDIA, exp_path)
+
+    with open(os.path.join(exp_folder, "expr_map"), "w") as f:
+        f.write(expr_map)
+
+    dbData = json.loads(expr_map)
+    dbData["Id"] = exp_path
+    response = table.put_item(Item=dbData)
+
+    return json.dumps({'status': "success" if response['ResponseMetadata']['HTTPStatusCode'] == 200 else "error"})
+
+def get_exprs(): 
+    request_params = request.get_json()
+    exp_path = request_params.get('exp_path', '')
+    exp_folder = os.path.join(MEDIA, exp_path)
+
+    expr_map = safe_read(os.path.join(exp_folder, "expr_map"))
+    return json.dumps({'status': "success",
+                       'expr_map': expr_map[0]})
 
 def start_spacer():
     request_params = request.get_json()
@@ -123,7 +190,9 @@ def poke():
     z3_trace = safe_read(os.path.join(exp_folder, ".z3-trace"))
     spacer_log = safe_read(os.path.join(exp_folder, "spacer.log"))
     run_cmd = safe_read(os.path.join(exp_folder, "run_cmd"))[0].strip()
-    var_names = safe_read(os.path.join(exp_folder, "var_names"))[0].strip()
+    temp_var_names = safe_read(os.path.join(exp_folder, "var_names")) 
+    var_names = temp_var_names[0].strip() if temp_var_names != [] else ""
+    expr_map = safe_read(os.path.join(exp_folder, "expr_map"))
 
     spacer_state = get_spacer_state(stderr, stdout)
     #load the file into db for parsing 
@@ -160,7 +229,8 @@ def poke():
                        'spacer_state': spacer_state,
                        'nodes_list': nodes_list,
                        'run_cmd': run_cmd,
-                       'var_names': var_names})
+                       'var_names': var_names,
+                       'expr_map': expr_map[0]})
 
 
 @app.route('/spacer/fetch_exps', methods=['POST'])
@@ -175,6 +245,14 @@ def handle_poke():
 @app.route('/spacer/upload_files', methods=['POST'])
 def handle_upload_files():
     return upload_files()
-
+@app.route('/spacer/save_exprs', methods=['POST'])
+def handle_save():
+    return save_exprs()
+@app.route('/spacer/get_exprs', methods=['POST'])
+def handle_get():
+    return get_exprs()
+@app.route('/spacer/transform_exprs', methods=['POST'])
+def handle_transform():
+    return transform_exprs()
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
