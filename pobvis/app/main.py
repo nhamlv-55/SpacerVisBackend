@@ -242,9 +242,6 @@ def handle_start_spacer_iterative():
 @app.route('/spacer/poke', methods=['POST'])
 def handle_poke():
     return poke()
-@app.route('/spacer/upload_files', methods=['POST'])
-def handle_upload_files():
-    return upload_files()
 @app.route('/spacer/save_exprs', methods=['POST'])
 def handle_save():
     return save_exprs()
