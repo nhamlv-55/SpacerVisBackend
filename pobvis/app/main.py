@@ -11,6 +11,11 @@ try:
 except ImportError:
     pipmain(['install', 'requests'])
     
+try:
+    __import__('dotenv')
+except ImportError:
+    pipmain(['install', 'python-dotenv'])
+
 import requests
 import boto3
 import sys

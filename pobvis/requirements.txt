@@ -3,3 +3,4 @@ flask-cors
 psutil
 boto3
 requests
+python-dotenv
