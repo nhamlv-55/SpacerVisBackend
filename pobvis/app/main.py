@@ -94,7 +94,34 @@ def save_exprs(dynamodb=None):
                 aws_access_key_id=access_key,
                 aws_secret_access_key=secret_key
         )
-    table = dynamodb.Table(table_name)
+    existing_tables = client.list_tables()['TableNames']
+    if table_name not in existing_tables:
+        table = dynamodb.create_table(
+            TableName=table_name,
+            AttributeDefinitions=[
+                {'AttributeName': 'Id', 'AttributeType': 'S'},
+            ],
+            KeySchema=[
+                {'AttributeName': 'Id', 'KeyType': 'HASH'}
+            ],
+            ProvisionedThroughput={
+                'ReadCapacityUnits': 5,
+                'WriteCapacityUnits': 5,
+            }
+        )
+        
+    else:
+        table = dynamodb.Table(table_name)
+
+    table_info = client.describe_table(
+        TableName=table_name
+    )
+    table_status = table_info['Table']['TableStatus']
+    while table_status != "ACTIVE":
+        table_info = client.describe_table(
+            TableName=table_name
+        )
+        table_status = table_info['Table']['TableStatus']
     request_params = request.get_json()
     exp_path = request_params.get('exp_path', '')
     expr_map = request_params.get('expr_map', '')
