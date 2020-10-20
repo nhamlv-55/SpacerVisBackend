@@ -1,21 +1,4 @@
 """Style guide: use underscore for all variable and function names"""
-
-from pip import main as pipmain
-try: 
-    __import__('boto3')
-except ImportError: 
-    pipmain(['install', 'boto3'])
-
-try:
-    __import__('requests')
-except ImportError:
-    pipmain(['install', 'requests'])
-    
-try:
-    __import__('dotenv')
-except ImportError:
-    pipmain(['install', 'python-dotenv'])
-
 import requests
 import boto3
 import sys
