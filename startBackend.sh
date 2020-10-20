@@ -5,5 +5,6 @@ docker exec -it SpacerBackend bash -c "pip3 install -r /SpacerBackend/pobvis/req
 cd app/
 docker cp main.py SpacerBackend:/SpacerBackend/pobvis/app/main.py
 docker cp .env SpacerBackend:/SpacerBackend/pobvis/app/.env
+docker cp utils/utils.py SpacerBackend:/SpacerBackend/pobvis/app/utils/utils.py
 docker exec -it SpacerBackend bash -c "python3 main.py -z3 /SpacerBackend/z3s/NhamZ3/build/z3"
 
