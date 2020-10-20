@@ -218,26 +218,25 @@ def poke():
         rels.append(rel)
 
     #TODO: only read spacer.log when there are no errors
-    if spacer_state == 'running' :
-        nodes_list = ms.parse(spacer_log)
-        #parse expr to json
-        for idx in nodes_list:
-            node = nodes_list[idx]
-            if node["exprID"]>2:
-                expr = node["expr"]
-                expr_stream = io.StringIO(expr)
-                try:
-                    ast = rels[0].pysmt_parse_lemma(expr_stream)
-                    ast_json = order_node(to_json(ast))
-                    node["ast_json"] = ast_json
+    nodes_list = ms.parse(spacer_log)
+    #parse expr to json
+    for idx in nodes_list:
+        node = nodes_list[idx]
+        if node["exprID"]>2:
+            expr = node["expr"]
+            expr_stream = io.StringIO(expr)
+            try:
+                ast = rels[0].pysmt_parse_lemma(expr_stream)
+                ast_json = order_node(to_json(ast))
+                node["ast_json"] = ast_json
 
-                except Exception as e:
-                    # PySMT has a bug in __str__ of the Exception, hence for now we need to turn off the debug message here
-                    # print("expr stream:", expr)
-                    # print("Exception when ordering the node:", e)
-                    # print("Broken Node", node)
-                    # print("Broken Node exprID:", node["exprID"])
-                    node["ast_json"] = {"type": "ERROR", "content": "trace is incomplete"}
+            except Exception as e:
+                # PySMT has a bug in __str__ of the Exception, hence for now we need to turn off the debug message here
+                # print("expr stream:", expr)
+                # print("Exception when ordering the node:", e)
+                # print("Broken Node", node)
+                # print("Broken Node exprID:", node["exprID"])
+                node["ast_json"] = {"type": "ERROR", "content": "trace is incomplete"}
 
 
     return json.dumps({'status': "success",

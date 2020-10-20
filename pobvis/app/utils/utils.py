@@ -108,4 +108,6 @@ def check_if_process_running(processName):
 
 def get_spacer_state(stderr, stdout):
     #TODO: implement me
+    if stdout[0] != '':
+        return stdout[0]
     return "running"
