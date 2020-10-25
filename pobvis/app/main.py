@@ -56,7 +56,7 @@ def transform_exprs():
     exp_folder = os.path.join(MEDIA, exp_path)
     with open(os.path.join(exp_folder, "transformed_expr_map"), "w") as f:
          f.write(json.dumps(response.json()))
-    return json.dumps({'status': "success", "t_expr_map": response.json()})
+    return json.dumps({'status': "success", "response": response.json()})
     
 
 def save_exprs(dynamodb=None):
