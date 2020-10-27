@@ -1,0 +1,68 @@
+#+TITLE: Backlog
+#+AUTHOR: Aishwarya Ramanathan
+
+* Visualizer
+** DONE complete the system
+*** DONE changed ones should be accepted by user
+** DONE figure out where renaming happens
+** DONE Ask nham and hari for examples that look good in chc comp
+** DONE colour the pre condition and post condition on implication
+** DONE Talk to Nham about fixing the visualizer
+   DEADLINE: <2020-10-13 Tue>
+** DONE fix if spacer is still running
+** DONE show what the result of spacer is
+** DONE Fix two node diff functionality
+** DONE Type errors in master branch with sunburst chart
+** DONE indication that transformation is complete
+*** DONE Include whats the transformation
+** TODO indication of what has been manually changed
+    - have to rewrite where the graph is created
+** TODO File errors
+*** TODO Hari's file
+*** DONE Lia files > 46
+*** TODO Arie's file
+    - run the input file in spacer and see what shows up
+      - should have more interesting lemmas
+** TODO show the final invariant (see all the stars together)
+** TODO user can change the variable names in the visualized version
+   - include a legend on a side
+   - could be flash fill esque (future) (regular excel flashfill)
+   - Nham could help with the deep learning on this
+   
+* Prose & Prose API
+** Think of an architecture for this whole thing
+** Multiple Clause Transformations
+*** A < 0 && A >= 0 -> A == 0
+
+** Clause Transformation
+*** DONE complete the system
+**** DONE transform all lemmas and send back
+**** DONE keep whats real and whats changed separate
+*** DONE update the grammar
+**** DONE processes can be detected
+*** DONE figure out scoring
+   Cause: Only one program is showing up when two equally viable programs are available
+   - add print statement
+   - set breakpoints
+   Solution: Not an issue with scoring, turns out that the a different example spec was needed,
+   one that allowed more than one program to be viable.
+*** DONE Change credentials for AWS to only write, no edits/removal
+*** TODO Add declare statements for any problem not just simple bakery
+    
+** Literal Transformation
+*** TODO rearrange literals
+**** DONE first iteration
+**** TODO Find alternative for uminus
+**** TODO Rearrange Ideas
+***** TODO < 2 == <=1
+      
+** Variable Transformation
+   - use existing prose instead of making your own
+*** Example
+    - remove main_int
+      - in turn changes all other places of that variables
+      - prose gives you the ability to go back
+        - "undo by example"
+        
+* Research
+** DONE look at bakery for real
