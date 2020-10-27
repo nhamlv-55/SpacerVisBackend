@@ -1,0 +1,3 @@
+[submodule "SpacerProseBackend"]
+	path = SpacerProseBackend
+	url = git@github.com:aishr/SpacerProseBackend.git

@@ -1,3 +1,4 @@
 media/
 exp_db
 .env
+.pyc
