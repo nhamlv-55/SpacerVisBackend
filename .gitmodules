@@ -1,3 +1,6 @@
 [submodule "SpacerProseBackend"]
 	path = SpacerProseBackend
 	url = git@github.com:aishr/SpacerProseBackend.git
+[submodule "chc-tools"]
+	path = chc-tools
+	url = git@github.com:chc-comp/chc-tools.git
