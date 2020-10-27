@@ -1,1 +1,1 @@
-docker exec -it SpacerBackend bash -c "../../../SpacerProseBackend/SpacerTransformationsAPI/Spacerdotnet run"
+docker exec -it SpacerBackend bash -c "dotnet run --project /SpacerBackend/SpacerProseBackend/SpacerTransformationsAPI/SpacerTransformationsAPI/"
