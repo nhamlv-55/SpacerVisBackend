@@ -23,9 +23,14 @@ Arguments breakdown:
 
 ```
 ## 2.a. Start the backend server, using the default z3 
+On one terminal, start the backend
 ```
  docker exec -it SpacerBackend bash -c "python3 main.py -z3 /SpacerBackend/z3s/NhamZ3/build/z3"
 ``` 
+On another terminal, start the Prose Engine
+```
+docker exec -it SpacerBackend bash -c "dotnet run --project /SpacerBackend/SpacerProseBackend/SpacerTransformationsAPI/SpacerTransformationsAPI/"
+```
 Arguments breakdown:
 ```
 -z3: path to the z3 binary, relative to the container's folder structure.
@@ -33,6 +38,7 @@ The folder structure inside the container:
 #/SpacerBackend/
 #├── chc-tools
 #├── Dockerfile
+#├── SpacerProseBackend
 #├── pobvis
 #│   └── app
 #│       ├── exp_db
@@ -51,7 +57,7 @@ For example, you have your own Z3 at `~/opt/z3squashed/`, your binary is at `~/o
  docker cp ~/opt/z3squashed/ SpacerBackend:/SpacerBackend/z3s/
  docker exec -it SpacerBackend bash -c "python3 main.py -z3 /SpacerBackend/z3s/z3squashed/build/z3"
 ```
-
+Prose engine can be run as in 2.a
 ## 3. Update the image to the latest version
 When the backend is updated, you can update it as follows:
 ### 3.1 Backup the current database
