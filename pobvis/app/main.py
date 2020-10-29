@@ -51,7 +51,7 @@ def transform_exprs():
 
     request_params = request.get_json()
     exp_path = request_params.get('exp_path', '')
-    response = requests.get("http://localhost:2000/api/v1/transformations/applytransformation?instance=" + exp_path)
+    response = requests.get("http://0.0.0.0:2000/api/v1/transformations/applytransformation?instance=" + exp_path)
     print(response.json())
     exp_folder = os.path.join(MEDIA, exp_path)
     with open(os.path.join(exp_folder, "transformed_expr_map"), "w") as f:
@@ -209,13 +209,17 @@ def poke():
     var_names = temp_var_names[0].strip() if temp_var_names != [] else ""
     expr_map = safe_read(os.path.join(exp_folder, "expr_map"))
 
+    status = "success"
     spacer_state = get_spacer_state(stderr, stdout)
-    #load the file into db for parsing 
-    db = H.load_horn_db_from_file(os.path.join(exp_folder, "input_file.smt2"))
-    rels = []
-    for rel_name in db._rels:
-        rel = db.get_rel(rel_name)
-        rels.append(rel)
+    #load the file into db for parsing
+    try:
+        db = H.load_horn_db_from_file(os.path.join(exp_folder, "input_file.smt2"))
+        rels = []
+        for rel_name in db._rels:
+            rel = db.get_rel(rel_name)
+            rels.append(rel)
+    except:
+        status = "error in loading horndb. skip parsing the file"
 
     #TODO: only read spacer.log when there are no errors
     nodes_list = ms.parse(spacer_log)
