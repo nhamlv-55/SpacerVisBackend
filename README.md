@@ -9,7 +9,7 @@ This is the backend server to use with the frontend hosted [here](https://nhamlv
 ```
 (However, I recommend trying the `dev` image for the latest features and bug fixes
 ```
- docker run -dit -p 5000:5000 --name SpacerBackend levn/spacer_backend:dev
+ docker run -dit -p 5000:5000 --name SpacerBackend levn/spacer_backend:dev<version>
 
 ```
 Arguments breakdown:
@@ -18,6 +18,7 @@ Arguments breakdown:
 --network="host": map docker's localhost to the host
 --name: name the container for easy management
 -p: to map the port 5000 of host to container's. The frontend access the server through port 5000, so this is needed.
+<version>: if you compile your z3 using ubuntu 18.04, <version> is 1804. 2004 if you use ubuntu 20.04.
 
 ```
 ## 2.a. Start the backend server, using the default z3 
