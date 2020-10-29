@@ -18,7 +18,7 @@
 ** TODO indication of what has been manually changed
     - have to rewrite where the graph is created
 ** TODO File errors
-*** TODO Hari's file
+*** DONE Hari's file
 *** DONE Lia files > 46
 *** TODO Arie's file
     - run the input file in spacer and see what shows up
@@ -28,7 +28,7 @@
    - include a legend on a side
    - could be flash fill esque (future) (regular excel flashfill)
    - Nham could help with the deep learning on this
-   
+** TODO better error logging on the frontend (which part of the stack is this error)
 * Prose & Prose API
 ** Think of an architecture for this whole thing
 ** Multiple Clause Transformations
