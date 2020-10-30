@@ -54,9 +54,20 @@ def transform_exprs():
     response = requests.get("http://0.0.0.0:2000/api/v1/transformations/applytransformation?instance=" + exp_path)
     print(response.json())
     exp_folder = os.path.join(MEDIA, exp_path)
+    declare_statements = get_declare_statements(exp_folder)
     with open(os.path.join(exp_folder, "transformed_expr_map"), "w") as f:
          f.write(json.dumps(response.json()))
     return json.dumps({'status': "success", "response": response.json()})
+
+def get_declare_statements(exp_folder):
+    result = []
+    with open(os.path.join(exp_folder, "transformed_expr_map"), "r") as f:
+        for line in f:
+            if "declare" in line:
+                result.append(line)
+
+    return result
+    
     
 
 def save_exprs(dynamodb=None):
