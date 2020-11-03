@@ -47,24 +47,53 @@ def pooling():
     update_status()
     return fetch_exps()
 
-def transform_exprs():
+def learn_transformation():
+    request_params = request.get_json()
+    exp_path = request_params.get('exp_path', '')
+    exp_folder = os.path.join(MEDIA, exp_path)
+    declare_statements = get_declare_statements(exp_folder)
+    body = {
+        'instance': exp_path,
+        'declareStatements': declare_statements
+    }
+    url = 'http://0.0.0.0:2000/api/v1/transformations/learntransformation'
+    response = requests.post(url, json=body)
+    if response.status_code != 200:
+        return json.dumps({'status': "error"})
+
+    with open(os.path.join(exp_folder, "possible_transformations"), "w") as f:
+         f.write(json.dumps(response.json()))
+    return json.dumps({'status': "success", "response": response.json()})
+
+    
+
+def apply_transformation():
 
     request_params = request.get_json()
     exp_path = request_params.get('exp_path', '')
-    response = requests.get("http://0.0.0.0:2000/api/v1/transformations/applytransformation?instance=" + exp_path)
-    print(response.json())
+    chosen_program = request_params.get('selectedProgram', '')
     exp_folder = os.path.join(MEDIA, exp_path)
     declare_statements = get_declare_statements(exp_folder)
+    body = {
+        'instance': exp_path,
+        'declareStatements': declare_statements,
+        'program': chosen_program
+    }
+    url = 'http://0.0.0.0:2000/api/v1/transformations/applytransformation'
+    response = requests.post(url, json=body)
+    if response.status_code != 200:
+        return json.dumps({'status': "error"})
+
     with open(os.path.join(exp_folder, "transformed_expr_map"), "w") as f:
          f.write(json.dumps(response.json()))
     return json.dumps({'status': "success", "response": response.json()})
 
 def get_declare_statements(exp_folder):
     result = []
-    with open(os.path.join(exp_folder, "transformed_expr_map"), "r") as f:
+    with open(os.path.join(exp_folder, "input_file.smt2"), "r") as f:
         for line in f:
             if "declare" in line:
-                result.append(line)
+                result.append(line.strip())
 
     return result
     
@@ -277,9 +306,12 @@ def handle_save():
 @app.route('/spacer/get_exprs', methods=['POST'])
 def handle_get():
     return get_exprs()
-@app.route('/spacer/transform_exprs', methods=['POST'])
-def handle_transform():
-    return transform_exprs()
+@app.route('/spacer/learn_transformation', methods=['POST'])
+def handle_learn_transform():
+    return learn_transformation()
+@app.route('/spacer/apply_transformation', methods=['POST'])
+def handle_apply_transform():
+    return apply_transformation()
 @app.route('/spacer/upload_files', methods=['POST'])
 def handle_upload_files():
     return upload_files()
