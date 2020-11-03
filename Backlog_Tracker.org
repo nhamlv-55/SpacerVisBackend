@@ -24,11 +24,14 @@
     - run the input file in spacer and see what shows up
       - should have more interesting lemmas
 ** TODO show the final invariant (see all the stars together)
+*** apply a transformation to all lemmas 
 ** TODO user can change the variable names in the visualized version
    - include a legend on a side
    - could be flash fill esque (future) (regular excel flashfill)
    - Nham could help with the deep learning on this
 ** TODO better error logging on the frontend (which part of the stack is this error)
+** TODO Make literal movements more keyboard friendly but with structure
+   
 * Prose & Prose API
 ** Think of an architecture for this whole thing
 ** Multiple Clause Transformations
@@ -48,13 +51,14 @@
    one that allowed more than one program to be viable.
 *** DONE Change credentials for AWS to only write, no edits/removal
 *** TODO Add declare statements for any problem not just simple bakery
+*** TODO Decouple Learning and Applying of Transformations
     
 ** Literal Transformation
 *** TODO rearrange literals
 **** DONE first iteration
 **** TODO Find alternative for uminus
 **** TODO Rearrange Ideas
-***** TODO < 2 == <=1
+***** TODO \lt 2 == \le 1
       
 ** Variable Transformation
    - use existing prose instead of making your own
