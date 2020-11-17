@@ -89,13 +89,12 @@ def apply_transformation():
     return json.dumps({'status': "success", "response": response.json()})
 
 def get_declare_statements(exp_folder):
-    result = []
-    with open(os.path.join(exp_folder, "input_file.smt2"), "r") as f:
+    temp_result = []
+    with open(os.path.join(exp_folder, "var_decls"), "r") as f:
         for line in f:
-            if "declare" in line:
-                result.append(line.strip())
+            temp_result.append(line.strip())
 
-    return result
+    return " ".join(temp_result)
     
     
 
@@ -232,6 +231,14 @@ def upload_files():
 
     return json.dumps({'status': "success", 'message': "success"})
 
+def save_var_rels(rel, f):
+    if (rel.name() == "simple!!query"):
+        return
+    file_line = "(declare-const {name} ({sort}))\n"
+    for i in range(rel._fdecl.arity()):
+        name = rel._mk_arg_name(i)
+        sort = str(rel._fdecl.domain(i)).replace(",", "").replace("(", " ").replace(")", "")
+        f.write(file_line.format(name=name, sort=sort))
 
 def poke():
     #TODO: finish parsing using all the files in the exp_folder (input_file, etc.)
@@ -258,6 +265,9 @@ def poke():
         for rel_name in db._rels:
             rel = db.get_rel(rel_name)
             rels.append(rel)
+        with open(os.path.join(exp_folder, "var_decls"), "w") as f:
+            for rel in rels:
+                save_var_rels(rel, f);
     except:
         status = "error in loading horndb. skip parsing the file"
 
