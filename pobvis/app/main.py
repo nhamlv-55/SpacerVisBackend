@@ -13,7 +13,7 @@ from chctools import horndb as H
 import io
 import os
 from os import environ
-from settings import DATABASE, MEDIA, options_for_visualization
+from settings import DATABASE, MEDIA, PROSEBASEURL, options_for_visualization
 from subprocess import PIPE, STDOUT, Popen, run
 from chctools import horndb as H
 from utils.utils import *
@@ -47,26 +47,54 @@ def pooling():
     update_status()
     return fetch_exps()
 
-def transform_exprs():
+def learn_transformation():
+    request_params = request.get_json()
+    exp_path = request_params.get('exp_path', '')
+    exp_folder = os.path.join(MEDIA, exp_path)
+    declare_statements = get_declare_statements(exp_folder)
+    body = {
+        'instance': exp_path,
+        'declareStatements': declare_statements
+    }
+    url = PROSEBASEURL + 'learntransformation'
+    response = requests.post(url, json=body)
+    if response.status_code != 200:
+        return json.dumps({'status': "error"})
+
+    with open(os.path.join(exp_folder, "possible_transformations"), "w") as f:
+         f.write(json.dumps(response.json()))
+    return json.dumps({'status': "success", "response": response.json()})
+
+    
+
+def apply_transformation():
 
     request_params = request.get_json()
     exp_path = request_params.get('exp_path', '')
-    response = requests.get("http://0.0.0.0:2000/api/v1/transformations/applytransformation?instance=" + exp_path)
-    print(response.json())
+    chosen_program = request_params.get('selectedProgram', '')
     exp_folder = os.path.join(MEDIA, exp_path)
     declare_statements = get_declare_statements(exp_folder)
+    body = {
+        'instance': exp_path,
+        'declareStatements': declare_statements,
+        'program': chosen_program
+    }
+    url = PROSEBASEURL + 'applytransformation'
+    response = requests.post(url, json=body)
+    if response.status_code != 200:
+        return json.dumps({'status': "error"})
+
     with open(os.path.join(exp_folder, "transformed_expr_map"), "w") as f:
          f.write(json.dumps(response.json()))
     return json.dumps({'status': "success", "response": response.json()})
 
 def get_declare_statements(exp_folder):
-    result = []
-    with open(os.path.join(exp_folder, "transformed_expr_map"), "r") as f:
+    temp_result = []
+    with open(os.path.join(exp_folder, "var_decls"), "r") as f:
         for line in f:
-            if "declare" in line:
-                result.append(line)
+            temp_result.append(line.strip())
 
-    return result
+    return " ".join(temp_result)
     
     
 
@@ -203,6 +231,14 @@ def upload_files():
 
     return json.dumps({'status': "success", 'message': "success"})
 
+def save_var_rels(rel, f):
+    if (rel.name() == "simple!!query"):
+        return
+    file_line = "(declare-const {name} ({sort}))\n"
+    for i in range(rel._fdecl.arity()):
+        name = rel._mk_arg_name(i)
+        sort = str(rel._fdecl.domain(i)).replace(",", "").replace("(", " ").replace(")", "")
+        f.write(file_line.format(name=name, sort=sort))
 
 def poke():
     #TODO: finish parsing using all the files in the exp_folder (input_file, etc.)
@@ -229,6 +265,9 @@ def poke():
         for rel_name in db._rels:
             rel = db.get_rel(rel_name)
             rels.append(rel)
+        with open(os.path.join(exp_folder, "var_decls"), "w") as f:
+            for rel in rels:
+                save_var_rels(rel, f);
     except:
         status = "error in loading horndb. skip parsing the file"
 
@@ -277,9 +316,12 @@ def handle_save():
 @app.route('/spacer/get_exprs', methods=['POST'])
 def handle_get():
     return get_exprs()
-@app.route('/spacer/transform_exprs', methods=['POST'])
-def handle_transform():
-    return transform_exprs()
+@app.route('/spacer/learn_transformation', methods=['POST'])
+def handle_learn_transform():
+    return learn_transformation()
+@app.route('/spacer/apply_transformation', methods=['POST'])
+def handle_apply_transform():
+    return apply_transformation()
 @app.route('/spacer/upload_files', methods=['POST'])
 def handle_upload_files():
     return upload_files()
