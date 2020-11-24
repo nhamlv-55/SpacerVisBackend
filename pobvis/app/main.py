@@ -13,7 +13,7 @@ from chctools import horndb as H
 import io
 import os
 from os import environ
-from settings import DATABASE, MEDIA, options_for_visualization
+from settings import DATABASE, MEDIA, PROSEBASEURL, options_for_visualization
 from subprocess import PIPE, STDOUT, Popen, run
 from chctools import horndb as H
 from utils.utils import *
@@ -56,7 +56,7 @@ def learn_transformation():
         'instance': exp_path,
         'declareStatements': declare_statements
     }
-    url = 'http://0.0.0.0:2000/api/v1/transformations/learntransformation'
+    url = PROSEBASEURL + 'learntransformation'
     response = requests.post(url, json=body)
     if response.status_code != 200:
         return json.dumps({'status': "error"})
@@ -79,7 +79,7 @@ def apply_transformation():
         'declareStatements': declare_statements,
         'program': chosen_program
     }
-    url = 'http://0.0.0.0:2000/api/v1/transformations/applytransformation'
+    url = PROSEBASEURL + 'applytransformation'
     response = requests.post(url, json=body)
     if response.status_code != 200:
         return json.dumps({'status': "error"})
