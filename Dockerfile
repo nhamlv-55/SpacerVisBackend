@@ -13,10 +13,12 @@ FROM ubuntu:18.04
 #│       ├── start_server.sh
 #│       └── utils
 #└── z3s
-#install dotnet and other stuffs
+RUN apt update && apt install -y wget unzip
+RUN wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.9/z3-4.8.9-x64-ubuntu-16.04.zip -O z3s.zip
+RUN unzip z3s.zip
+#install other stuffs
 RUN apt update && apt install -y vim python3-pip apt-transport-https
 
-COPY ./z3 /SpacerBackend/z3s/NhamZ3
 COPY ./pobvis /SpacerBackend/pobvis
 COPY ./chc-tools /SpacerBackend/chc-tools
 
@@ -25,4 +27,4 @@ RUN pip3 install -r /SpacerBackend/pobvis/requirements.txt
 ENV PYTHONPATH "${PYTHONPATH}:/SpacerBackend/chc-tools:/SpacerBackend/z3s/NhamZ3/build/python"
 WORKDIR /SpacerBackend/pobvis/app/
 
-ENTRYPOINT python3 main.py -z3 /SpacerBackend/z3s/NhamZ3/build/z3 
+ENTRYPOINT python3 main.py -z3 /z3s/z3 
