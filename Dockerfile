@@ -15,7 +15,7 @@ FROM ubuntu:18.04
 #└── z3s
 RUN apt update && apt install -y wget unzip
 RUN wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.9/z3-4.8.9-x64-ubuntu-16.04.zip -O z3s.zip
-RUN unzip z3s.zip -d z3s/
+RUN unzip -j z3s.zip -d z3s/
 #install other stuffs
 RUN apt update && apt install -y vim python3-pip apt-transport-https sqlite3
 
@@ -28,4 +28,4 @@ RUN pip3 install -r /SpacerBackend/pobvis/requirements.txt
 ENV PYTHONPATH "${PYTHONPATH}:/SpacerBackend/chc-tools:/SpacerBackend/z3s/NhamZ3/build/python"
 WORKDIR /SpacerBackend/pobvis/app/
 
-ENTRYPOINT python3 main.py -z3 /z3s/bin/z3 
+ENTRYPOINT python3 main.py -z3 /z3s/z3 
