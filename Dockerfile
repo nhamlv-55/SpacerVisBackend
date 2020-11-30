@@ -19,6 +19,12 @@ RUN unzip -j z3s.zip -d z3s/
 #install other stuffs
 RUN apt update && apt install -y vim python3-pip apt-transport-https sqlite3
 
+#dynamodb iam creds
+ENV TABLE_NAME "spacer-visualization"
+ENV ACCESS_KEY_ID AKIASOHWIFLXIIGPYLSH
+ENV SECRET_ACCESS_KEY 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
+ENV REGION_NAME "us-east-2"
+
 COPY ./pobvis /SpacerBackend/pobvis
 COPY ./chc-tools /SpacerBackend/chc-tools
 
