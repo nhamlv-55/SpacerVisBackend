@@ -8,7 +8,7 @@ else:
     DATABASE = './exp_db'
     MEDIA = './media'
 
-PROSEBASEURL = 'SpacerProseBackend:2000/api/v1/transformations/'
+PROSEBASEURL = 'http://SpacerProseBackend:2000/api/v1/transformations/'
 
 print('DATABASE=', os.path.abspath(DATABASE))
 print('MEDIA=', os.path.abspath(MEDIA))
