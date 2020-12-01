@@ -65,6 +65,25 @@ def learn_transformation():
          f.write(json.dumps(response.json()))
     return json.dumps({'status': "success", "response": response.json()})
 
+def learn_transformation_modified():
+    request_params = request.get_json()
+    exp_path = request_params.get('exp_path', '')
+    inputOutputExamples = request_param.get('inputOutputExamples', '')
+    exp_folder = os.path.join(MEDIA, exp_path)
+    declare_statements = get_declare_statements(exp_folder)
+    body = {
+        'instance': exp_path,
+        'declareStatements': declare_statements,
+        'inputOutputExamples': inputOutputExamples
+    }
+    url = PROSEBASEURL + 'learntransformationmodified'
+    response = requests.post(url, json=body)
+    if response.status_code != 200:
+        return json.dumps({'status': "error"})
+
+    with open(os.path.join(exp_folder, "possible_transformations"), "w") as f:
+         f.write(json.dumps(response.json()))
+    return json.dumps({'status': "success", "response": response.json()})
     
 
 def apply_transformation():
@@ -319,6 +338,9 @@ def handle_get():
 @app.route('/spacer/learn_transformation', methods=['POST'])
 def handle_learn_transform():
     return learn_transformation()
+@app.route('/spacer/learn_transformation_modified', methods=['POST'])
+def handle_learn_transform_modified():
+    return learn_transformation_modified()
 @app.route('/spacer/apply_transformation', methods=['POST'])
 def handle_apply_transform():
     return apply_transformation()
