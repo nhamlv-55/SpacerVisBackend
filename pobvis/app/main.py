@@ -49,6 +49,7 @@ def pooling():
 
 def learn_transformation():
     request_params = request.get_json()
+    print(request_params)
     exp_path = request_params.get('exp_path', '')
     exp_folder = os.path.join(MEDIA, exp_path)
     declare_statements = get_declare_statements(exp_folder)
@@ -56,6 +57,7 @@ def learn_transformation():
         'instance': exp_path,
         'declareStatements': declare_statements
     }
+    print(body)
     url = os.path.join(PROSEBASEURL, 'learntransformation')
     response = requests.post(url, json=body)
     if response.status_code != 200:
@@ -67,6 +69,7 @@ def learn_transformation():
 
 def learn_transformation_modified():
     request_params = request.get_json()
+    print(request_params)
     exp_path = request_params.get('exp_path', '')
     inputOutputExamples = request_params.get('inputOutputExamples', '')
     exp_folder = os.path.join(MEDIA, exp_path)
@@ -76,8 +79,10 @@ def learn_transformation_modified():
         'declareStatements': declare_statements,
         'inputOutputExamples': inputOutputExamples
     }
+    print(body)
     url = os.path.join(PROSEBASEURL, 'learntransformationmodified')
     response = requests.post(url, json=body)
+    print(response)
     if response.status_code != 200:
         return json.dumps({'status': "error"})
 
