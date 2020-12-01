@@ -56,7 +56,7 @@ def learn_transformation():
         'instance': exp_path,
         'declareStatements': declare_statements
     }
-    url = PROSEBASEURL + 'learntransformation'
+    url = os.path.join(PROSEBASEURL. 'learntransformation')
     response = requests.post(url, json=body)
     if response.status_code != 200:
         return json.dumps({'status': "error"})
@@ -76,7 +76,7 @@ def learn_transformation_modified():
         'declareStatements': declare_statements,
         'inputOutputExamples': inputOutputExamples
     }
-    url = PROSEBASEURL + 'learntransformationmodified'
+    url = os.path.join(PROSEBASEURL. 'learntransformationmodified')
     response = requests.post(url, json=body)
     if response.status_code != 200:
         return json.dumps({'status': "error"})
@@ -98,7 +98,7 @@ def apply_transformation():
         'declareStatements': declare_statements,
         'program': chosen_program
     }
-    url = PROSEBASEURL + 'applytransformation'
+    url = os.path.join(PROSEBASEURL. 'applytransformation')
     response = requests.post(url, json=body)
     if response.status_code != 200:
         return json.dumps({'status': "error"})
