@@ -35,7 +35,7 @@
 * Prose & Prose API
 ** Think of an architecture for this whole thing
 ** Multiple Clause Transformations
-*** A < 0 && A >= 0 -> A == 0
+   - A < 0 && A >= 0 -> A == 0
 
 ** Clause Transformation
 *** DONE complete the system
@@ -50,8 +50,12 @@
    Solution: Not an issue with scoring, turns out that the a different example spec was needed,
    one that allowed more than one program to be viable.
 *** DONE Change credentials for AWS to only write, no edits/removal
-*** TODO Add declare statements for any problem not just simple bakery
-*** TODO Decouple Learning and Applying of Transformations
+*** DONE Add declare statements for any problem not just simple bakery
+*** DONE Decouple Learning and Applying of Transformations
+*** TODO Isolate a process under different conditions
+    Ex:
+    - process 3 on the left if process one is in statement
+    - process 3 on the right otherwise
     
 ** Literal Transformation
 *** TODO rearrange literals
