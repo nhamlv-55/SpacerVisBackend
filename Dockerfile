@@ -34,4 +34,4 @@ RUN pip3 install -r /SpacerBackend/chc-tools/requirements.txt
 RUN pip3 install -r /SpacerBackend/pobvis/requirements.txt
 ENV PYTHONPATH "${PYTHONPATH}:/SpacerBackend/chc-tools:/SpacerBackend/z3s/NhamZ3/build/python"
 
-ENTRYPOINT python3 main.py -z3 /z3s/z3 
+ENTRYPOINT python3 -u main.py -z3 /z3s/z3 
