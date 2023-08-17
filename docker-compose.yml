@@ -1,12 +1,11 @@
 version: "3.8"
 services:
   SpacerVisBackend:
-    build: ~/visualizer/SpacerVisBackend/
-    image: spacervisbackend
+    image: aemari/spacer-vis-backend:latest
+    platform: "linux/amd64"
     ports: 
       - 5000:5000
   SpacerProseBackend:
-    build: ~/visualizer/SpacerProseBackend/
-    image: spacerprosebackend
+    image: aemari/spacer-prose-backend:latest 
     ports: 
       - 2000:2000
